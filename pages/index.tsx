@@ -17,7 +17,7 @@ const Home: NextPage = () => {
 
       <footer className={styles.footer}>
         <a href="#" target="_blank" rel="noopener noreferrer">
-          Powered by Manav
+          Powered by Manav & Asami
         </a>
       </footer>
     </div>
