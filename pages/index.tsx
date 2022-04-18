@@ -2,20 +2,44 @@ import axios from 'axios'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
-import { Skill } from '../@types/interfaces'
+import { Skill, UniqueSkill } from '../@types/interfaces'
 import SkillButton from '../components/SkillButton'
-import { CenterFlexContainer } from '../components/styled-components/Flex'
+import {
+  CenterFlexContainer,
+  FlexTransitionGroup
+} from '../components/styled-components/Flex'
 import { SkillsField } from '../components/styled-components/TextField'
 import styles from '../styles/Home.module.css'
+import { CSSTransition } from 'react-transition-group'
+import { v4 as uuidv4 } from 'uuid'
 
 const Home: NextPage = () => {
-  const [skills, setSkills] = useState<Skill[]>([])
+  const [skills, setSkills] = useState<UniqueSkill[]>([])
+  const [filteredSkills, setFilteredSkills] = useState<UniqueSkill[]>([])
+  const [filter, setFilter] = useState('')
+  const [selectedSkill, setSelectedSkill] = useState<string>('')
   useEffect((): void => {
     const response = axios.post('/api/skills').then((response) => {
       const { data }: { data: Skill[] } = response
-      setSkills(data)
+      // Shuffle our skills
+      setSkills(
+        data
+          .map((e) => ({ ...e, uuid: uuidv4() }))
+          .sort(() => Math.random() - 0.5)
+      )
     })
   }, [])
+  // Apply filter across name, description, experience
+  useEffect((): void => {
+    setFilteredSkills(
+      skills.filter(
+        (skill) =>
+          skill.name.toLowerCase().includes(filter.toLowerCase()) ||
+          skill.description.toLowerCase().includes(filter.toLowerCase()) ||
+          skill.experience.toLowerCase().includes(filter.toLowerCase())
+      )
+    )
+  }, [filter, skills])
   return (
     <div className={styles.container}>
       <Head>
@@ -24,14 +48,33 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <CenterFlexContainer>
-        <SkillsField variant="outlined" label="Search Skills"></SkillsField>
+        <SkillsField
+          variant="outlined"
+          label="Search Skills"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}></SkillsField>
       </CenterFlexContainer>
-      <CenterFlexContainer minHeight="15vh">
-        {skills.length &&
-          skills.map((skill: Skill, index: number) => (
-            <SkillButton key={index} skill={skill} />
-          ))}
-      </CenterFlexContainer>
+      <FlexTransitionGroup>
+        {/**If a skill is selected, show that, else if a filter string is entered, show filtered list,
+         * else show the entire list  */}
+        {(selectedSkill !== ''
+          ? [
+              skills.find(
+                (skill) => skill.uuid === selectedSkill
+              ) as UniqueSkill
+            ]
+          : filter === ''
+          ? skills
+          : filteredSkills
+        ).map((skill: UniqueSkill, index: number) => (
+          <CSSTransition key={index} timeout={500} classNames="item">
+            <SkillButton
+              skill={skill}
+              onClick={() => setSelectedSkill(skill.uuid)}
+            />
+          </CSSTransition>
+        ))}
+      </FlexTransitionGroup>
       <footer className={styles.footer}>
         <a href="#" target="_blank" rel="noopener noreferrer">
           Powered by Manav & Asami

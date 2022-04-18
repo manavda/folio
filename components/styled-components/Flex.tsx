@@ -1,11 +1,18 @@
 import styled from 'styled-components'
-import tw from 'twin.macro'
+import { TransitionGroup } from 'react-transition-group'
 export interface FlexContainerProps {
   minHeight?: string
   minWidth?: string
   height?: string
   width?: string
 }
+export const FlexTransitionGroup = styled(TransitionGroup)`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: auto;
+  max-width: 1600px;
+`
 export const CenterFlexContainer = styled.div<FlexContainerProps>`
   display: flex;
   justify-content: center;

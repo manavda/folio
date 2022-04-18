@@ -4,3 +4,7 @@ export type Skill = {
   experience: string
   iconClass?: string
 }
+
+export interface UniqueSkill extends Skill {
+  uuid: string
+}
