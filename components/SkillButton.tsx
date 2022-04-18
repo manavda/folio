@@ -14,15 +14,7 @@ const StyledButton = styled(Button)`
 
 const SkillButton: FC<Props> = ({ skill, onClick }) => {
   return (
-    <StyledButton
-      variant="contained"
-      startIcon={
-        <FontAwesomeIcon
-          icon="docker"
-          style={{ display: 'inline-block', margin: '5px' }}
-        />
-      }
-      onClick={onClick}>
+    <StyledButton variant="contained" onClick={onClick}>
       {skill.name}
     </StyledButton>
   )

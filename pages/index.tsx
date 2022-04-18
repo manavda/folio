@@ -18,6 +18,17 @@ const Home: NextPage = () => {
   const [filteredSkills, setFilteredSkills] = useState<UniqueSkill[]>([])
   const [filter, setFilter] = useState('')
   const [selectedSkill, setSelectedSkill] = useState<string>('')
+  useEffect(() => {
+    const close = (e: KeyboardEvent) => {
+      if (e.code === 'Escape') {
+        setSelectedSkill('')
+        setFilter('')
+      }
+    }
+    window.addEventListener('keydown', close)
+    return () => window.removeEventListener('keydown', close)
+  }, [])
+
   useEffect((): void => {
     const response = axios.post('/api/skills').then((response) => {
       const { data }: { data: Skill[] } = response
@@ -52,7 +63,10 @@ const Home: NextPage = () => {
           variant="outlined"
           label="Search Skills"
           value={filter}
-          onChange={(e) => setFilter(e.target.value)}></SkillsField>
+          onChange={(e) => {
+            setFilter(e.target.value)
+            setSelectedSkill('')
+          }}></SkillsField>
       </CenterFlexContainer>
       <FlexTransitionGroup>
         {/**If a skill is selected, show that, else if a filter string is entered, show filtered list,
@@ -67,7 +81,11 @@ const Home: NextPage = () => {
           ? skills
           : filteredSkills
         ).map((skill: UniqueSkill, index: number) => (
-          <CSSTransition key={index} timeout={500} classNames="item">
+          <CSSTransition
+            key={index}
+            timeout={{ enter: 500, exit: 500 }}
+            unmountOnExit
+            classNames="item">
             <SkillButton
               skill={skill}
               onClick={() => setSelectedSkill(skill.uuid)}
