@@ -1,9 +1,21 @@
+import axios from 'axios'
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import { useEffect, useState } from 'react'
+import { Skill } from '../@types/interfaces'
+import SkillButton from '../components/SkillButton'
 import { CenterFlexContainer } from '../components/styled-components/Flex'
 import { SkillsField } from '../components/styled-components/TextField'
 import styles from '../styles/Home.module.css'
+
 const Home: NextPage = () => {
+  const [skills, setSkills] = useState<Skill[]>([])
+  useEffect((): void => {
+    const response = axios.post('/api/skills').then((response) => {
+      const { data }: { data: Skill[] } = response
+      setSkills(data)
+    })
+  }, [])
   return (
     <div className={styles.container}>
       <Head>
@@ -14,7 +26,12 @@ const Home: NextPage = () => {
       <CenterFlexContainer>
         <SkillsField variant="outlined" label="Search Skills"></SkillsField>
       </CenterFlexContainer>
-
+      <CenterFlexContainer minHeight="15vh">
+        {skills.length &&
+          skills.map((skill: Skill, index: number) => (
+            <SkillButton key={index} skill={skill} />
+          ))}
+      </CenterFlexContainer>
       <footer className={styles.footer}>
         <a href="#" target="_blank" rel="noopener noreferrer">
           Powered by Manav & Asami
