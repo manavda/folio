@@ -85,7 +85,7 @@ const Home: NextPage = () => {
             key={index}
             timeout={{ enter: 500, exit: 500 }}
             unmountOnExit
-            classNames="item">
+            classNames="skill">
             <SkillButton
               skill={skill}
               onClick={() => setSelectedSkill(skill.uuid)}
