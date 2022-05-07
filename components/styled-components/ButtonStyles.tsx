@@ -11,5 +11,6 @@ export const Button = styled.button`
   px-4 
   rounded
   border-0
+  hover:transition-all duration-500
   `}
 `
