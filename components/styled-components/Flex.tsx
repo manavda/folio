@@ -12,6 +12,8 @@ export const FlexTransitionGroup = styled(TransitionGroup)`
   justify-content: center;
   margin: auto;
   max-width: 1600px;
+  background-color: white;
+  border: none;
 `
 export const CenterFlexContainer = styled.div<FlexContainerProps>`
   display: flex;

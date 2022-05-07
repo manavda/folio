@@ -9,5 +9,8 @@ export const Button = styled.button`
   font-bold 
   py-2 
   px-4 
-  rounded`}
+  rounded
+  border-0
+  hover:transition-all duration-500
+  `}
 `

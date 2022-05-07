@@ -68,27 +68,27 @@ const Home: NextPage = () => {
             setSelectedSkill('')
           }}></SkillsField>
       </CenterFlexContainer>
-      <FlexTransitionGroup>
+      <FlexTransitionGroup component="button">
         {/**If a skill is selected, show that, else if a filter string is entered, show filtered list,
          * else show the entire list  */}
         {(selectedSkill !== ''
           ? [
               skills.find(
                 (skill) => skill.uuid === selectedSkill
-              ) as UniqueSkill
+              ) as UniqueSkill // A skill will always be found, because we have a unique uuid
             ]
-          : filter === ''
-          ? skills
-          : filteredSkills
-        ).map((skill: UniqueSkill, index: number) => (
+          : filter !== ''
+          ? filteredSkills
+          : skills
+        ).map((skill: UniqueSkill) => (
           <CSSTransition
-            key={index}
-            timeout={{ enter: 500, exit: 500 }}
+            key={skill?.uuid}
+            timeout={{ enter: 250, exit: 250 }}
             unmountOnExit
-            classNames="item">
+            classNames="skill">
             <SkillButton
               skill={skill}
-              onClick={() => setSelectedSkill(skill.uuid)}
+              onClick={() => setSelectedSkill(skill?.uuid)}
             />
           </CSSTransition>
         ))}
